@@ -30,17 +30,16 @@ pip install flet matplotlib
    ```bash
    pip install flet
    pip freeze > requirements.txt
-   ```
 2）运行软件：
-   ```bash
    python main.py
    ```
 
 5. 打包独立可执行程序（.exe）：
 如果您希望将软件分享给未安装 Python 环境的设备使用，可以通过以下步骤打包为独立客户端：
-# 首先安装打包工具
+首先安装打包工具
 pip install pyinstaller
-# 在项目根目录执行打包命令（使用预设配置文件）
+
+在项目根目录执行打包命令（使用预设配置文件）
 pyinstaller 极简记账本.spec
 编译成功后，您可以在自动生成的 dist 文件夹内找到打包好的可执行程序。双击运行后，程序相关的备份文件和导出报表会自动生成在程序同级的 backups 与 exports 目录中。
 
