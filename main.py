@@ -46,7 +46,7 @@ INCOME_CATEGORY_OPTIONS = [
     "补贴",
     "其他收入",
 ]
- 
+
 
 def _safe_load_json(path, default_value):
     if not os.path.exists(path):
