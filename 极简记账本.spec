@@ -15,7 +15,7 @@ a = Analysis(
     optimize=0,
 )
 pyz = PYZ(a.pure)
-
+ 
 exe = EXE(
     pyz,
     a.scripts,
