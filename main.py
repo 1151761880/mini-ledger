@@ -48,14 +48,26 @@ INCOME_CATEGORY_OPTIONS = [
 ]
 
 
-def _safe_load_json(path, default_value):
+def _safe_load_json(path: str, default_value):
+    """
+    安全读取本地 JSON 文件的基础防崩溃层。
+    增加并细化了对于 JSON 格式损坏 (JSONDecodeError) 的特殊捕获与日志记录。
+    """
     if not os.path.exists(path):
         return default_value
+        
     try:
         with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data
-    except Exception:
+            return json.load(f)
+            
+    except json.JSONDecodeError as decode_err:
+        # 重构：专门拦截并记录 JSON 数据损坏异常（防数据丢失断点）
+        print(f"[Warning] 格式损坏无法解析 {path}: {decode_err}")
+        return default_value
+        
+    except Exception as e:
+        # 重构：兜底所有其它 I/O 错误并输出原因，不再“吞咽”异常
+        print(f"[Error] 读取文件发生未知异常 {path}: {e}")
         return default_value
 
 
