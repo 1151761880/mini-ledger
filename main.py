@@ -617,23 +617,28 @@ def main(page: ft.Page):
         _show_msg("JSON 导出成功")
 
     def export_csv(e):
+        import csv
         os.makedirs(EXPORT_DIR, exist_ok=True)
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         path = os.path.join(EXPORT_DIR, f"ledger_export_{ts}.csv")
-        lines = ["id,type,date,category,amount,note,created_at"]
-        for r in records:
-            row = [
-                str(r.get("id", "")).replace(",", " "),
-                str(r.get("type", "")).replace(",", " "),
-                str(r.get("date", "")).replace(",", " "),
-                str(r.get("category", "")).replace(",", " "),
-                str(r.get("amount", "")).replace(",", " "),
-                str(r.get("note", "")).replace(",", " "),
-                str(r.get("created_at", "")).replace(",", " "),
-            ]
-            lines.append(",".join(row))
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
+        
+        # 优化说明：引入标准 csv 模块，并使用 utf-8-sig 带 BOM 头部
+        # 彻底解决 Microsoft Excel 打开 CSV 时中文显示乱码的 Bug
+        # 同时也避免了手动 replace(",") 破坏用户原本的备注标点。
+        with open(path, "w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["id", "type", "date", "category", "amount", "note", "created_at"])
+            for r in records:
+                writer.writerow([
+                    r.get("id", ""),
+                    r.get("type", ""),
+                    r.get("date", ""),
+                    r.get("category", ""),
+                    r.get("amount", ""),
+                    r.get("note", ""),
+                    r.get("created_at", "")
+                ])
+                
         txt_export_status.value = f"已导出 CSV：{path}"
         _show_msg("CSV 导出成功")
 
