@@ -502,6 +502,9 @@ def main(page: ft.Page):
                 update_display()
                 _show_msg("模板已执行")
                 return
+        
+        # 优化：增加默认返回路径的兜底提示
+        _show_msg("执行失败：未找到对应模板")
 
     def run_templates_for_current_month(e=None, silent=False):
         target_month = datetime.now().strftime("%Y-%m")
@@ -993,7 +996,10 @@ def main(page: ft.Page):
                 save_trash_data(trash_records)
                 update_trash_list()
                 update_display()
-                break
+                return  # 优化：将 break 改为 return 以保证单一职责出口
+                
+        # 优化：防御性编程，如果在遍历结束后仍未返回，说明未匹配到
+        _show_msg("删除失败：记录不存在或已被删除")
 
     def delete_custom_category(e, cat):
         nonlocal custom_categories
